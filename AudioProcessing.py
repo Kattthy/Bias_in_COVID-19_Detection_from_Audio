@@ -35,7 +35,7 @@ if __name__ == '__main__':
     uuid_set = set(metadata['uuid'])
     audiofiles = [f for f in listdir('./coughvid_20211012/') if isfile(join('./coughvid_20211012/', f))]
     root_path = './coughvid_20211012/'
-    
+
     if sys.argv[1] == 'convert2wav':
         for f in tqdm(audiofiles): # f: XXXX.ogg
             uuid, file_type = f.split('.')
@@ -57,5 +57,19 @@ if __name__ == '__main__':
             ax = fig.add_subplot(111)
             p = librosa.display.specshow(mfcc, ax=ax)
             fig_path = mfcc_root_path + uuid + '.png'
+            fig.savefig(fig_path)
+
+    elif sys.argv[1] == 'wav2spec':
+        spec_root_path = root_path + 'spec/'
+        for uuid in tqdm(list(uuid_set)):
+            wav_path = root_path + uuid + '.wav'
+            y, sr = librosa.load(wav_path)
+            fig = plt.Figure()
+            canvas = FigureCanvas(fig)
+            ax = fig.add_subplot(111)
+            S = librosa.feature.melspectrogram(y, sr=sr, n_mels=128)
+            log_S = librosa.power_to_db(S, ref=np.max)
+            librosa.display.specshow(log_S, sr=sr, ax=ax)
+            fig_path = spec_root_path + uuid + '.png'
             fig.savefig(fig_path)
     
