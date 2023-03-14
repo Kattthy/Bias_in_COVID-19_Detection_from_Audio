@@ -16,7 +16,7 @@ class MelSpectrogramCNN(nn.Module):
         self.fc = nn.Linear(4096, 1024)
         self.bn3 = nn.BatchNorm1d(1024)
         self.dropout3 = nn.Dropout(p=0.5)
-        self.output_layer = nn.Linear(1024, 2)
+        self.output_layer = nn.Linear(1024, 3)
 
     def forward(self, x):
         x = self.features(x)
@@ -44,7 +44,7 @@ class CovidNet(nn.Module):
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
         self.fc1 = nn.Linear(512, 256)
         self.fc2 = nn.Linear(256, 128)
-        self.fc3 = nn.Linear(128, 2)
+        self.fc3 = nn.Linear(128, 3)
         self.softmax = nn.Softmax(dim=1)
         self.dropout = nn.Dropout(p=0.5)
 
